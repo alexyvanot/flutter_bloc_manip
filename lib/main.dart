@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_manip/bloc/counter_bloc.dart';
-import 'package:flutter_bloc_manip/bloc/counter_event.dart';
-import 'package:flutter_bloc_manip/bloc/counter_state.dart';
-import 'package:flutter_bloc_manip/bloc/istate.dart';
-import 'package:flutter_bloc_manip/bloc/overhead_state.dart';
+import 'package:flutter_bloc_manip/bloc/counter/counter_event.dart';
+import 'package:flutter_bloc_manip/bloc/counter/counter_state.dart';
+import 'package:flutter_bloc_manip/bloc/history/history_state.dart';
+import 'package:flutter_bloc_manip/bloc/history_bloc.dart';
+import 'package:flutter_bloc_manip/bloc/interface/istate.dart';
+import 'package:flutter_bloc_manip/bloc/counter/overhead_state.dart';
 
 void main() {
   runApp(const CountApp());
@@ -15,16 +17,22 @@ class CountApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Count App',
-      home: BlocProvider(
-        create: (_) => CounterBloc(),
-        child: const CounterPage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<HistoryBloc>(create: (_) => HistoryBloc()),
+        BlocProvider<CounterBloc>(
+          create: (context) => CounterBloc(historyBloc: context.read<HistoryBloc>()),
+        ),
+      ],
+      child: const MaterialApp(
+        title: 'Count App',
+        home: CounterPage(),
+        debugShowCheckedModeBanner: false,
       ),
-      debugShowCheckedModeBanner: false,
     );
   }
 }
+
 
 class CounterPage extends StatelessWidget {
   const CounterPage({super.key});
@@ -41,7 +49,19 @@ class CounterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Count Page')),
+      appBar: AppBar(
+        title: const Text('Count Page'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const HistoryPage()),
+              );
+            },
+          )
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -62,7 +82,7 @@ class CounterPage extends StatelessWidget {
                 } else if (state is OverheadState) {
                   return const Text('Overhead state');
                 }
-                  return const Text('Unknown state');
+                return const Text('Unknown state');
               },
             ),
           ],
@@ -74,15 +94,40 @@ class CounterPage extends StatelessWidget {
           FloatingActionButton(
             onPressed: () => context.read<CounterBloc>().add(IncrementEvent()),
             tooltip: 'Increment',
+            heroTag: 'incrementButton',
             child: const Icon(Icons.add),
           ),
           const SizedBox(height: 8),
           FloatingActionButton(
             onPressed: () => context.read<CounterBloc>().add(DecrementEvent()),
             tooltip: 'Decrement',
+            heroTag: 'decrementButton',
             child: const Icon(Icons.remove),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class HistoryPage extends StatelessWidget {
+  const HistoryPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('History')),
+      body: BlocBuilder<HistoryBloc, HistoryState>(
+        builder: (context, state) {
+          return ListView.builder(
+            itemCount: state.operations.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(state.operations[index]),
+              );
+            },
+          );
+        },
       ),
     );
   }

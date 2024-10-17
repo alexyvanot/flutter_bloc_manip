@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_manip/bloc/istate.dart';
+import 'package:flutter_bloc_manip/bloc/interface/istate.dart';
 
 class OverheadState implements IState {
   final String message;

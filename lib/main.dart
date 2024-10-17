@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_manip/bloc/counter_bloc.dart';
 import 'package:flutter_bloc_manip/bloc/counter_event.dart';
 import 'package:flutter_bloc_manip/bloc/counter_state.dart';
+import 'package:flutter_bloc_manip/bloc/istate.dart';
+import 'package:flutter_bloc_manip/bloc/overhead_state.dart';
 
 void main() {
   runApp(const CountApp());
@@ -45,12 +47,22 @@ class CounterPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text('You have pushed the button this many times:'),
-            BlocBuilder<CounterBloc, CounterState>(
+            BlocConsumer<CounterBloc, IState>(
+              listener: (context, state) {
+                if (state is OverheadState) {
+                  _showSnackBar(context, state.message);
+                }
+              },
               builder: (context, state) {
-                return Text(
-                  '${state.count}',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                );
+                if (state is CounterState) {
+                  return Text(
+                    '${state.count}',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  );
+                } else if (state is OverheadState) {
+                  return const Text('Overhead state');
+                }
+                  return const Text('Unknown state');
               },
             ),
           ],
@@ -60,27 +72,13 @@ class CounterPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           FloatingActionButton(
-            onPressed: () {
-              final count = context.read<CounterBloc>().state.count;
-              if (count < 10) {
-                context.read<CounterBloc>().add(IncrementEvent());
-              } else {
-                _showSnackBar(context, "The count can't go above 10");
-              }
-            },
+            onPressed: () => context.read<CounterBloc>().add(IncrementEvent()),
             tooltip: 'Increment',
             child: const Icon(Icons.add),
           ),
           const SizedBox(height: 8),
           FloatingActionButton(
-            onPressed: () {
-              final count = context.read<CounterBloc>().state.count;
-              if (count > 0) {
-                context.read<CounterBloc>().add(DecrementEvent());
-              } else {
-                _showSnackBar(context, "The count can't go below 0");
-              }
-            },
+            onPressed: () => context.read<CounterBloc>().add(DecrementEvent()),
             tooltip: 'Decrement',
             child: const Icon(Icons.remove),
           ),

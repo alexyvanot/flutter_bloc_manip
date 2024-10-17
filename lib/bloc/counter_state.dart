@@ -1,4 +1,6 @@
-class CounterState {
+import 'package:flutter_bloc_manip/bloc/istate.dart';
+
+class CounterState implements IState {
   final int count;
-  CounterState(this.count);
+  CounterState({ required this.count });
 }

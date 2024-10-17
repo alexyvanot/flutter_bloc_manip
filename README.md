@@ -13,6 +13,7 @@ Le projet implémente un compteur avec des boutons pour incrémenter et décrém
 - **Incrémentation et décrémentation** : Les valeurs du compteur peuvent être ajustées à l'aide des boutons "plus" et "moins".
 - **Gestion des limites** : Le compteur est bloqué à une valeur minimale de 0 et une valeur maximale de 10.
 - **SnackBar** : Un message s'affiche pour avertir l'utilisateur lorsque le compteur atteint ses limites (en dessous de 0 ou au-dessus de 10).
+- **Historique des opérations** : Toutes les opérations d'incrémentation et de décrémentation sont enregistrées dans une liste d'historique accessible via une page dédiée.
 - **BLoC pattern** : La logique de gestion de l'état est encapsulée dans un BLoC (`Business Logic Component`), séparant ainsi la logique métier de l'interface utilisateur.
 
 ## Prérequis
@@ -48,15 +49,6 @@ Le projet implémente un compteur avec des boutons pour incrémenter et décrém
    flutter run
 
 2. Utilisez les boutons "+" et "-" pour ajuster la valeur du compteur.
-
-## Structure du Projet
-
-- **lib/** : Dossier principal du code source Flutter.
-  - **lib/bloc/** : Contient la logique métier et la gestion de l'état via [BLoC](https://pub.dev/packages/bloc).
-    - **bloc/counter_bloc.dart** : Le BLoC du compteur qui gère les événements d'incrémentation et de décrémentation.
-    - **bloc/counter_event.dart** : Définit les événements (IncrementEvent, DecrementEvent) pour interagir avec le BLoC.
-    - **bloc/counter_state.dart** : Définit les différents états, comme `CounterState`, qui contient la valeur actuelle du compteur.
-  - **lib/main.dart** : Point d'entrée de l'application, intégrant la logique du BLoC à l'interface utilisateur.
 
 ## Contribution
 

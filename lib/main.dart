@@ -123,7 +123,7 @@ class HistoryPage extends StatelessWidget {
             itemCount: state.operations.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(state.operations[index]),
+                title: Text('${index + 1}: ${state.operations[index]}'),
               );
             },
           );

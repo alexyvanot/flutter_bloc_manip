@@ -11,6 +11,24 @@ class CounterBloc extends Bloc<CounterEvent, IState> {
   final HistoryBloc historyBloc;
   final int min = 0;
   final int max = 10;
+  String get formattedDate {
+    final now = DateTime.now();
+    final buffer = StringBuffer()
+      ..write('[')
+      ..write(now.year)
+      ..write('/')
+      ..write(now.month.toString().padLeft(2, '0'))
+      ..write('/')
+      ..write(now.day.toString().padLeft(2, '0'))
+      ..write(' ')
+      ..write(now.hour.toString().padLeft(2, '0'))
+      ..write(':')
+      ..write(now.minute.toString().padLeft(2, '0'))
+      ..write(':')
+      ..write(now.second.toString().padLeft(2, '0'))
+      ..write(']');
+    return buffer.toString();
+  }
 
   CounterBloc({HistoryBloc? historyBloc})
       : count = 0,
@@ -20,10 +38,10 @@ class CounterBloc extends Bloc<CounterEvent, IState> {
       if (count < max) {
         count += 1;
         emit(CounterState(count: count));
-        historyBloc?.add(AddOperationEvent("Incremented to $count"));
+        historyBloc?.add(AddOperationEvent("$formattedDate Incremented to $count"));
       } else {
         emit(OverheadState(message: "The count can't go above $max"));
-        historyBloc?.add(AddOperationEvent("Attempted to increment above $max but was prevented"));
+        historyBloc?.add(AddOperationEvent("$formattedDate Attempted to increment above $max but was prevented"));
       }
     });
 
@@ -31,10 +49,10 @@ class CounterBloc extends Bloc<CounterEvent, IState> {
       if (count > min) {
         count -= 1;
         emit(CounterState(count: count));
-        historyBloc?.add(AddOperationEvent("Decremented to $count"));
+        historyBloc?.add(AddOperationEvent("$formattedDate Decremented to $count"));
       } else {
         emit(OverheadState(message: "The count can't go below $min"));
-        historyBloc?.add(AddOperationEvent("Attempted to decrement below $min but was prevented"));
+        historyBloc?.add(AddOperationEvent("$formattedDate Attempted to decrement below $min but was prevented"));
       }
     });
   }

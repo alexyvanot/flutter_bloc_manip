@@ -51,12 +51,12 @@ Le projet implémente un compteur avec des boutons pour incrémenter et décrém
 
 ## Structure du Projet
 
-- **bloc/** : Contient la logique métier et la gestion de l'état via BLoC (Bloc, Events, States).
 - **lib/** : Dossier principal du code source Flutter.
-  - **counter_bloc.dart** : Le BLoC du compteur qui gère les événements d'incrémentation et de décrémentation.
-  - **counter_event.dart** : Les événements (IncrementEvent, DecrementEvent).
-  - **counter_state.dart** : Les états (ex: `CounterState` avec la valeur actuelle du compteur).
-  - **main.dart** : Point d'entrée de l'application, intégrant la logique du BLoC à l'interface utilisateur.
+  - **lib/bloc/** : Contient la logique métier et la gestion de l'état via BLoC.
+    - **bloc/counter_bloc.dart** : Le BLoC du compteur qui gère les événements d'incrémentation et de décrémentation.
+    - **bloc/counter_event.dart** : Définit les événements (IncrementEvent, DecrementEvent) pour interagir avec le BLoC.
+    - **bloc/counter_state.dart** : Définit les différents états, comme `CounterState`, qui contient la valeur actuelle du compteur.
+  - **lib/main.dart** : Point d'entrée de l'application, intégrant la logique du BLoC à l'interface utilisateur.
 
 ## Contribution
 
